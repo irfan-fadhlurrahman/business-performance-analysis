@@ -46,7 +46,7 @@ orders_customers_joined_2 AS (
         c.customer_unique_id,
         o.order_purchase_timestamp,
         ROW_NUMBER() OVER (
-        PARTITION BY c.customer_unique_id, EXTRACT(year FROM o.order_purchase_timestamp)
+            PARTITION BY c.customer_unique_id, EXTRACT(year FROM o.order_purchase_timestamp)
         ) AS row_number
     FROM 
         orders AS o
