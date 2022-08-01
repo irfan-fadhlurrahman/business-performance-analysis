@@ -1,4 +1,5 @@
 WITH orders_customers_joined_1 AS (
+-- Reusable table for active_customers and new_customers table
     SELECT 
         c.customer_unique_id, 
         o.order_purchase_timestamp,
@@ -11,6 +12,7 @@ WITH orders_customers_joined_1 AS (
     JOIN 
         customers AS c ON o.customer_id = c.customer_id
 ),
+-- 1. Average Monthly Active Users
 active_customers AS (
     SELECT 
         year, 
@@ -28,6 +30,7 @@ active_customers AS (
     GROUP BY 
         1
 ),
+-- 2. Total New Customers per year
 new_customers AS (
     SELECT 
         EXTRACT(year FROM order_purchase_timestamp) AS year,
@@ -42,6 +45,7 @@ new_customers AS (
         1
 ),
 orders_customers_joined_2 AS (
+-- Reusable table for repeat_customers and order_frequency table
     SELECT
         c.customer_unique_id,
         o.order_purchase_timestamp,
@@ -53,6 +57,7 @@ orders_customers_joined_2 AS (
     JOIN 
         customers AS c ON o.customer_id = c.customer_id
 ),
+-- 3. Total Repeated Customers per year
 repeat_customers AS (
     SELECT 
         EXTRACT(year FROM order_purchase_timestamp) AS year,
@@ -63,6 +68,7 @@ repeat_customers AS (
     GROUP BY 
         1
 ),
+-- 4. Average Total Order per year
 order_frequency AS (
     SELECT 
         year, 
@@ -82,6 +88,7 @@ order_frequency AS (
     ORDER BY 
         1
 )
+-- 5. Combine all metrics as one table
 SELECT
     ac.year,
     ac.avg_monthly_active_user,
